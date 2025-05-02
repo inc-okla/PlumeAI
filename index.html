@@ -1,0 +1,1392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plume AI - Automated Image Enhancement Software</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/ScrollTrigger.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/ScrollToPlugin.min.js"></script>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f8fafc;
+            color: #1e293b;
+            overflow-x: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        body.dark-mode {
+            background-color: #1a1a1a;
+            color: #f8fafc;
+        }
+        
+        .dark-mode .bg-white {
+            background-color: #2d2d2d !important;
+            color: #f8fafc;
+        }
+        
+        .dark-mode .bg-gray-50 {
+            background-color: #252525 !important;
+        }
+        
+        .dark-mode .text-gray-900 {
+            color: #f8fafc !important;
+        }
+        
+        .dark-mode .text-gray-600 {
+            color: #d1d5db !important;
+        }
+        
+        .dark-mode .bg-gray-900 {
+            background-color: #121212 !important;
+        }
+        
+        .dark-mode .border-gray-200 {
+            border-color: #444 !important;
+        }
+        
+        .gradient-bg {
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #d946ef 100%);
+        }
+        
+        .dark-gradient-bg {
+            background: linear-gradient(135deg, #1e1e1e 0%, #2d2d2d 50%, #3a3a3a 100%);
+        }
+        
+        .hero-pattern {
+            background-image: radial-gradient(rgba(255,255,255,0.1) 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+        
+        .dark-hero-pattern {
+            background-image: radial-gradient(rgba(0,0,0,0.1) 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+        
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+        
+        .card-hover:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        
+        .feature-icon {
+            transition: all 0.3s ease;
+        }
+        
+        .pricing-card:hover .feature-icon {
+            transform: scale(1.1);
+            color: #6366f1;
+        }
+        
+        .glow {
+            box-shadow: 0 0 15px rgba(99, 102, 241, 0.5);
+        }
+        
+        .video-container {
+            position: relative;
+            padding-bottom: 56.25%;
+            height: 0;
+            overflow: hidden;
+        }
+        
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        
+        .download-btn {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .download-btn::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -60%;
+            width: 200%;
+            height: 200%;
+            background: rgba(255,255,255,0.1);
+            transform: rotate(30deg);
+            transition: all 0.3s;
+        }
+        
+        .download-btn:hover::after {
+            left: 100%;
+        }
+        
+        .animate-float {
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+            100% { transform: translateY(0px); }
+        }
+        
+        .animate-pulse-slow {
+            animation: pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        
+        .download-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .dark-mode .download-modal-content {
+            background-color: #2d2d2d;
+            color: #f8fafc;
+        }
+        
+        /* New animations */
+        .animate-bounce-slow {
+            animation: bounce 3s ease infinite;
+        }
+        
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+        }
+        
+        .animate-spin-slow {
+            animation: spin 15s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .animate-shake {
+            animation: shake 5s cubic-bezier(.36,.07,.19,.97) infinite;
+        }
+        
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+            20%, 40%, 60%, 80% { transform: translateX(5px); }
+        }
+        
+        .animate-fade-in {
+            animation: fadeIn 1.5s ease-in-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .feature-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr;
+            gap: 1rem;
+        }
+        
+        .feature-header {
+            font-weight: bold;
+            padding: 1rem;
+            text-align: center;
+        }
+        
+        .feature-item {
+            padding: 1rem;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        
+        .dark-mode .feature-item {
+            border-bottom: 1px solid #444;
+        }
+        
+        .check-icon {
+            color: #10b981;
+        }
+        
+        .cross-icon {
+            color: #ef4444;
+        }
+        
+        .pricing-toggle {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 2rem;
+            background: #e5e7eb;
+            padding: 0.5rem;
+            border-radius: 2rem;
+            max-width: 300px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .dark-mode .pricing-toggle {
+            background: #333;
+        }
+        
+        .pricing-toggle-btn {
+            padding: 0.5rem 1.5rem;
+            border-radius: 2rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 500;
+        }
+        
+        .pricing-toggle-btn.active {
+            background: #6366f1;
+            color: white;
+        }
+        
+        .dark-mode .pricing-toggle-btn.active {
+            background: #8b5cf6;
+        }
+        
+        .hidden-pricing {
+            display: none;
+        }
+        
+        /* Particle background */
+        .particles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            overflow: hidden;
+        }
+        
+        .particle {
+            position: absolute;
+            background: rgba(99, 102, 241, 0.5);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+        
+        /* AI Processing Animation */
+        .ai-processing {
+            position: relative;
+            width: 100px;
+            height: 100px;
+            margin: 0 auto;
+        }
+        
+        .ai-circle {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 5px solid transparent;
+            border-top-color: #6366f1;
+            animation: ai-spin 2s linear infinite;
+        }
+        
+        .ai-circle:nth-child(2) {
+            width: 80%;
+            height: 80%;
+            top: 10%;
+            left: 10%;
+            border-top-color: #8b5cf6;
+            animation: ai-spin 1.5s linear infinite reverse;
+        }
+        
+        .ai-circle:nth-child(3) {
+            width: 60%;
+            height: 60%;
+            top: 20%;
+            left: 20%;
+            border-top-color: #d946ef;
+            animation: ai-spin 2.5s linear infinite;
+        }
+        
+        @keyframes ai-spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* Hover effects */
+        .hover-grow {
+            transition: transform 0.3s ease;
+        }
+        
+        .hover-grow:hover {
+            transform: scale(1.05);
+        }
+        
+        /* Gradient text */
+        .gradient-text {
+            background: linear-gradient(90deg, #6366f1, #8b5cf6, #d946ef);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        /* Section transitions */
+        .section-transition {
+            transition: all 0.5s ease;
+        }
+        
+        /* Floating elements */
+        .floating-elements {
+            position: relative;
+        }
+        
+        .floating-element {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(40px);
+            opacity: 0.7;
+            z-index: -1;
+        }
+    </style>
+</head>
+<body class="dark-mode">
+    <!-- Particle Background -->
+    <div class="particles" id="particles"></div>
+
+    <!-- Theme Toggle -->
+    <div class="fixed bottom-4 right-4 z-50">
+        <button id="theme-toggle" class="bg-indigo-500 text-white p-3 rounded-full shadow-lg hover:bg-indigo-600 transition-all duration-300 hover:rotate-12">
+            <i class="fas fa-moon"></i>
+        </button>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="bg-gray-900 text-white shadow-sm fixed w-full z-10">
+        <div class="max-w-10xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0 flex items-center">
+                        <img src="https://drive.google.com/file/d/12I2HlhsAJLjgjuN9n2UGYv84Tjbroo-0/view?usp=drive_link" alt="Plume Logo" class="w-8 h-8 mr-2">
+                        <span class="text-xl font-bold">Plume AI</span>
+                    </div>
+                </div>
+                <div class="hidden md:ml-6 md:flex md:items-center md:space-x-8">
+                    <a href="#features" class="text-gray-300 hover:text-white px-3 py-2 text-sm font-medium transition duration-300 hover:scale-105">Features</a>
+                    <a href="#demo" class="text-gray-300 hover:text-white px-3 py-2 text-sm font-medium transition duration-300 hover:scale-105">Demo</a>
+                    <a href="#pricing" class="text-gray-300 hover:text-white px-3 py-2 text-sm font-medium transition duration-300 hover:scale-105">Pricing</a>
+                    <a href="#download" class="text-gray-300 hover:text-white px-3 py-2 text-sm font-medium transition duration-300 hover:scale-105">Download</a>
+                    <a href="#" class="bg-indigo-500 hover:bg-indigo-600 text-white px-4 py-2 rounded-md text-sm font-medium transition duration-300 shadow-md hover:shadow-lg transform hover:-translate-y-1">Get Started</a>
+                </div>
+                <div class="-mr-2 flex items-center md:hidden">
+                    <button type="button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500" aria-controls="mobile-menu" aria-expanded="false" id="mobile-menu-button">
+                        <span class="sr-only">Open main menu</span>
+                        <svg class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Mobile menu -->
+        <div class="hidden md:hidden" id="mobile-menu">
+            <div class="pt-2 pb-3 space-y-1">
+                <a href="#features" class="block px-3 py-2 text-base font-medium text-gray-300 hover:text-white hover:bg-gray-700">Features</a>
+                <a href="#demo" class="block px-3 py-2 text-base font-medium text-gray-300 hover:text-white hover:bg-gray-700">Demo</a>
+                <a href="#pricing" class="block px-3 py-2 text-base font-medium text-gray-300 hover:text-white hover:bg-gray-700">Pricing</a>
+                <a href="#download" class="block px-3 py-2 text-base font-medium text-gray-300 hover:text-white hover:bg-gray-700">Download</a>
+                <a href="#" class="block w-full text-left px-3 py-2 text-base font-medium text-white bg-indigo-500 hover:bg-indigo-600">Get Started</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="dark-gradient-bg dark-hero-pattern pt-24 pb-20 relative overflow-hidden">
+        <div class="floating-elements">
+            <div class="floating-element bg-indigo-500 w-64 h-64 -top-32 -left-32 animate-spin-slow"></div>
+            <div class="floating-element bg-purple-500 w-96 h-96 -bottom-64 -right-64 animate-spin-slow animation-delay-2000"></div>
+        </div>
+        
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="md:flex md:items-center md:justify-between">
+                <div class="md:w-1/2 mt-10 md:mt-0">
+                    <h1 class="text-4xl md:text-5xl font-bold text-white mb-6 leading-tight">
+                        Automate Your <span class="gradient-text">Image Workflow</span> with AI
+                    </h1>
+                    <p class="text-lg text-gray-300 mb-8 max-w-lg">
+                        Plume AI automatically upscales images and removes backgrounds at scale. Perfect integration with PixelCut for seamless workflow automation.
+                    </p>
+                    <div class="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-4">
+                        <a href="#download" class="bg-white text-indigo-600 hover:bg-gray-100 px-6 py-3 rounded-lg font-medium text-center  download-btn transform hover:scale-105">
+                            <i class="fas fa-download mr-2"></i> Download Now
+                        </a>
+                        <a href="#demo" class="bg-indigo-800 bg-opacity-60 hover:bg-opacity-80 text-white px-6 py-3 rounded-lg font-medium text-center transform hover:scale-105">
+                            <i class="fas fa-play mr-2"></i> Watch Demo
+                        </a>
+                    </div>
+                    <div class="mt-8 flex items-center space-x-4">
+                        <div class="flex -space-x-2">
+                            <img class="w-10 h-10 rounded-full border-2 border-gray-800 hover:scale-110 transition-transform" src="https://randomuser.me/api/portraits/women/12.jpg" alt="User">
+                            <img class="w-10 h-10 rounded-full border-2 border-gray-800 hover:scale-110 transition-transform" src="https://randomuser.me/api/portraits/men/32.jpg" alt="User">
+                            <img class="w-10 h-10 rounded-full border-2 border-gray-800 hover:scale-110 transition-transform" src="https://randomuser.me/api/portraits/women/44.jpg" alt="User">
+                        </div>
+                        <div class="text-gray-300">
+                            <span class="font-medium">Trusted by</span> 100+ professionals
+                        </div>
+                    </div>
+                </div>
+                <div class="md:w-1/2 mt-10 md:mt-0 relative">
+                    <div class="relative max-w-md mx-auto">
+                        <div class="absolute -top-10 -left-10 w-32 h-32 bg-purple-300 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-pulse-slow"></div>
+                        <div class="absolute -bottom-10 -right-10 w-32 h-32 bg-indigo-300 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-pulse-slow animation-delay-2000"></div>
+                        <div class="relative bg-gray-800 p-2 rounded-2xl shadow-2xl animate-float hover:shadow-purple-500/30 transition-shadow">
+                            <img src="https://images.unsplash.com/photo-1633356122544-f134324a6cee?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" alt="Plume AI Interface" class="rounded-xl border border-gray-700 hover:border-indigo-500 transition-colors">
+                            <div class="absolute -bottom-5 -right-5 bg-indigo-500 text-white p-3 rounded-full shadow-lg hover:bg-indigo-600 transition-colors">
+                                <i class="fas fa-magic text-xl"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="py-20 bg-gray-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl font-bold text-white mb-4">Powerful Features</h2>
+                <p class="text-lg text-gray-300 max-w-2xl mx-auto">
+                    Plume AI combines cutting-edge AI technology with automation to supercharge your image processing workflow.
+                </p>
+            </div>
+            
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="bg-gray-700 p-8 rounded-xl card-hover hover:border-indigo-500 border border-transparent transition-all">
+                    <div class="w-14 h-14 bg-indigo-900 rounded-lg flex items-center justify-center mb-6">
+                        <i class="fas fa-bolt text-indigo-400 text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-white mb-3">Lightning Fast Processing</h3>
+                    <p class="text-gray-300">
+                        Process hundreds of images simultaneously with our multi-tab architecture. Get results in minutes instead of hours.
+                    </p>
+                </div>
+                
+                <div class="bg-gray-700 p-8 rounded-xl card-hover hover:border-purple-500 border border-transparent transition-all">
+                    <div class="w-14 h-14 bg-purple-900 rounded-lg flex items-center justify-center mb-6">
+                        <i class="fas fa-robot text-purple-400 text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-white mb-3">Smart AI Enhancement</h3>
+                    <p class="text-gray-300">
+                        Our AI automatically detects and enhances images, removing backgrounds and upscaling with incredible precision.
+                    </p>
+                </div>
+                
+                <div class="bg-gray-700 p-8 rounded-xl card-hover hover:border-blue-500 border border-transparent transition-all">
+                    <div class="w-14 h-14 bg-blue-900 rounded-lg flex items-center justify-center mb-6">
+                        <i class="fas fa-cogs text-blue-400 text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-white mb-3">Seamless PixelCut Integration</h3>
+                    <p class="text-gray-300">
+                        Direct integration with PixelCut means your processed images are ready to use in your projects immediately.
+                    </p>
+                </div>
+            </div>
+            
+            <!-- Feature Comparison Grid -->
+            <div class="mt-20 bg-gray-700 rounded-xl overflow-hidden">
+                <div class="p-6">
+                    <h3 class="text-2xl font-bold text-white mb-6 text-center">Feature Comparison</h3>
+                    
+                    <div class="feature-grid">
+                        <div class="feature-header"></div>
+                        <div class="feature-header bg-gray-800 rounded-t-lg">Free</div>
+                        <div class="feature-header bg-indigo-900 rounded-t-lg">Basic</div>
+                        <div class="feature-header bg-purple-900 rounded-t-lg">Pro</div>
+                        
+                        <div class="feature-item font-medium">Automation included</div>
+                        <div class="feature-item text-center"><i class="fas fa-check-circle check-icon"></i></div>
+                        <div class="feature-item text-center"><i class="fas fa-check-circle check-icon"></i></div>
+                        <div class="feature-item text-center"><i class="fas fa-check-circle check-icon"></i></div>
+                        
+                        <div class="feature-item font-medium">Worker browser tabs</div>
+                        <div class="feature-item text-center">1</div>
+                        <div class="feature-item text-center">6</div>
+                        <div class="feature-item text-center">10</div>
+                        
+                        <div class="feature-item font-medium">Max batch upload</div>
+                        <div class="feature-item text-center">5 images</div>
+                        <div class="feature-item text-center">20 images</div>
+                        <div class="feature-item text-center">30 images</div>
+                        
+                        <div class="feature-item font-medium">Automatic ZIP extract</div>
+                        <div class="feature-item text-center"><i class="fas fa-check-circle check-icon"></i></div>
+                        <div class="feature-item text-center"><i class="fas fa-check-circle check-icon"></i></div>
+                        <div class="feature-item text-center"><i class="fas fa-check-circle check-icon"></i></div>
+                        
+                        <div class="feature-item font-medium">Change device licenses</div>
+                        <div class="feature-item text-center"><i class="fas fa-times-circle cross-icon"></i></div>
+                        <div class="feature-item text-center"><i class="fas fa-check-circle check-icon"></i></div>
+                        <div class="feature-item text-center"><i class="fas fa-check-circle check-icon"></i></div>
+                        
+                        <div class="feature-item font-medium">Priority processing</div>
+                        <div class="feature-item text-center"><i class="fas fa-times-circle cross-icon"></i></div>
+                        <div class="feature-item text-center"><i class="fas fa-times-circle cross-icon"></i></div>
+                        <div class="feature-item text-center"><i class="fas fa-check-circle check-icon"></i></div>
+                        
+                        <div class="feature-item font-medium">Includes PixelCut account</div>
+                        <div class="feature-item text-center"><i class="fas fa-times-circle cross-icon"></i></div>
+                        <div class="feature-item text-center"><i class="fas fa-times-circle cross-icon"></i></div>
+                        <div class="feature-item text-center"><i class="fas fa-check-circle check-icon"></i></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Demo Video Section -->
+    <section id="demo" class="py-20 bg-gray-900">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl font-bold text-white mb-4">See Plume AI in Action</h2>
+                <p class="text-lg text-gray-300 max-w-2xl mx-auto">
+                    Watch how Plume AI can transform your image processing workflow in just minutes.
+                </p>
+            </div>
+            
+            <div class="max-w-4xl mx-auto bg-gray-800 rounded-xl overflow-hidden shadow-xl hover:shadow-2xl transition-shadow">
+                <div class="video-container">
+                    <iframe src="https://www.youtube.com/embed/aiRK4ceQGDk" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                </div>
+                <div class="p-6">
+                    <h3 class="text-xl font-semibold text-white mb-2">Automated Image Processing Demo</h3>
+                    <p class="text-gray-300">
+                        In this demo, we process 2000+ product images - removing backgrounds, upscaling resolution, and preparing them for PixelCut - all automatically.
+                    </p>
+                </div>
+            </div>
+            
+            <!-- Stats Section -->
+            <div class="grid md:grid-cols-3 gap-8 mt-16">
+                <div class="bg-gray-800 p-8 rounded-xl text-center hover:bg-gray-700 transition-colors">
+                    <div class="text-5xl font-bold text-indigo-400 mb-2">10x</div>
+                    <div class="text-gray-300">Faster processing than manual work</div>
+                </div>
+                <div class="bg-gray-800 p-8 rounded-xl text-center hover:bg-gray-700 transition-colors">
+                    <div class="text-5xl font-bold text-purple-400 mb-2">99.9%</div>
+                    <div class="text-gray-300">Accuracy in background removal</div>
+                </div>
+                <div class="bg-gray-800 p-8 rounded-xl text-center hover:bg-gray-700 transition-colors">
+                    <div class="text-5xl font-bold text-blue-400 mb-2">24/7</div>
+                    <div class="text-gray-300">Automation without breaks</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section id="pricing" class="py-20 bg-gray-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl font-bold text-white mb-4">Plans for you!</h2>
+                <p class="text-lg text-gray-300 max-w-2xl mx-auto">
+                    Choose the plan that fits your needs. Try risk free with our 7-day money-back guarantee!
+                </p>
+            </div>
+            
+            <!-- Pricing Toggle -->
+            <div class="pricing-toggle mb-8">
+                <button class="pricing-toggle-btn active" data-plan="monthly">Monthly</button>
+                <button class="pricing-toggle-btn" data-plan="quarterly">Quarterly (Save 15-20%)</button>
+            </div>
+            
+            <div class="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+                <!-- Basic Tier -->
+                <div class="bg-indigo-900 rounded-xl overflow-hidden shadow-lg pricing-card relative glow hover:border-indigo-400 border">
+                    <div class="absolute top-0 right-0 bg-indigo-500 text-white text-xs font-semibold px-3 py-1 rounded-bl-lg">
+                        MOST POPULAR
+                    </div>
+                    <div class="p-8">
+                        <h3 class="text-2xl font-bold text-white mb-2">Basic</h3>
+                        <p class="text-gray-300 mb-6">For professionals and small businesses</p>
+                        
+                        <!-- Monthly Pricing -->
+                        <div class="mb-8 monthly-pricing">
+                            <span class="text-4xl font-bold text-white">Rp. 50,000</span>
+                            <span class="text-gray-300">/ month</span>
+                            <div class="text-sm text-indigo-300 mt-1">Billed monthly</div>
+                        </div>
+                        
+                        <!-- Quarterly Pricing (hidden by default) -->
+                        <div class="mb-8 quarterly-pricing hidden-pricing">
+                            <span class="text-4xl font-bold text-white">Rp. 125,000</span>
+                            <span class="text-gray-300">/ 3 months</span>
+                            <div class="text-sm text-indigo-300 mt-1">Save 15% (Rp. 42,000/month)</div>
+                        </div>
+                        
+                        <ul class="space-y-4 mb-8">
+                            <li class="flex items-center">
+                                <i class="fas fa-check-circle text-indigo-400 mr-3 feature-icon"></i>
+                                <span class="text-gray-300">6 worker browser tabs</span>
+                            </li>
+                            <li class="flex items-center">
+                                <i class="fas fa-check-circle text-indigo-400 mr-3 feature-icon"></i>
+                                <span class="text-gray-300">Max batch upload: 20 images</span>
+                            </li>
+                            <li class="flex items-center">
+                                <i class="fas fa-check-circle text-indigo-400 mr-3 feature-icon"></i>
+                                <span class="text-gray-300">Automatic ZIP extract</span>
+                            </li>
+                            <li class="flex items-center">
+                                <i class="fas fa-check-circle text-indigo-400 mr-3 feature-icon"></i>
+                                <span class="text-gray-300">Change device licenses</span>
+                            </li>
+                            <li class="flex items-center">
+                                <i class="fas fa-check-circle text-indigo-400 opacity-0"></i>
+                                <span class="text-gray-300"></span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="px-8 pb-8">
+                        <button 
+							onclick="window.open('http://lynk.id/payme/okla', '_blank')" 
+							class="w-full bg-indigo-500 hover:bg-indigo-600 text-white font-medium py-3 px-4 rounded-lg transition duration-300 transform hover:scale-105">
+								Get Basic Plan
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Pro Tier -->
+                <div class="bg-purple-900 rounded-xl overflow-hidden shadow-lg pricing-card glow hover:border-purple-500 border">
+                    <div class="p-8">
+                        <h3 class="text-2xl font-bold text-white mb-2">Pro</h3>
+                        <p class="text-gray-300 mb-6">For agencies and high-volume users</p>
+                        
+                        <!-- Monthly Pricing -->
+                        <div class="mb-8 monthly-pricing">
+                            <span class="text-4xl font-bold text-white">Rp. 85,000</span>
+                            <span class="text-gray-300">/ month</span>
+                            <div class="text-sm text-purple-300 mt-1">Billed monthly</div>
+                        </div>
+                        
+                        <!-- Quarterly Pricing (hidden by default) -->
+                        <div class="mb-8 quarterly-pricing hidden-pricing">
+                            <span class="text-4xl font-bold text-white">Rp. 220,000</span>
+                            <span class="text-gray-300">/ 3 months</span>
+                            <div class="text-sm text-purple-300 mt-1">Save 15% (Rp. 73,000/month)</div>
+                        </div>
+                        
+                        <ul class="space-y-4 mb-8">
+                            <li class="flex items-center">
+                                <i class="fas fa-check-circle text-purple-400 mr-3 feature-icon"></i>
+                                <span class="text-gray-300">All fitur basic</span>
+                            </li>
+                            <li class="flex items-center">
+                                <i class="fas fa-check-circle text-purple-400 mr-3 feature-icon"></i>
+                                <span class="text-gray-300">10 worker browser tabs</span>
+                            </li>
+                            <li class="flex items-center">
+                                <i class="fas fa-check-circle text-purple-400 mr-3 feature-icon"></i>
+                                <span class="text-gray-300">Max batch upload: 30 images</span>
+                            </li>
+                            <li class="flex items-center">
+                                <i class="fas fa-check-circle text-purple-400 mr-3 feature-icon"></i>
+                                <span class="text-gray-300">Priority processing</span>
+                            </li>
+                            <li class="flex items-center">
+                                <i class="fas fa-check-circle text-purple-400 mr-3 feature-icon"></i>
+                                <span class="text-gray-300">Includes PixelCut account</span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="px-8 pb-8">
+                        <button 
+							onclick="window.open('http://lynk.id/payme/okla', '_blank')"
+							class="w-full bg-purple-500 hover:bg-purple-600 text-white font-medium py-3 px-4 rounded-lg transition duration-300 transform hover:scale-105">
+								Get Pro Plan
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Free Option -->
+            <div class="mt-8 text-center">
+                <p class="text-gray-300 mb-4">Not ready to commit? Try our free version with basic features.</p>
+                <a href="#download" class="inline-flex items-center text-indigo-400 hover:text-indigo-300 font-medium">
+                    Download Free Version <i class="fas fa-arrow-right ml-2"></i>
+                </a>
+            </div>
+            
+            <!-- Enterprise Option -->
+            <div class="mt-12 text-center">
+                <p class="text-gray-300 mb-4">Need custom solutions for your enterprise?</p>
+                <a href="#" class="inline-flex items-center text-indigo-400 hover:text-indigo-300 font-medium">
+                    Contact our sales team <i class="fas fa-arrow-right ml-2"></i>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- AI Processing Animation Section -->
+    <section class="py-16 bg-gray-900">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center">
+                <h3 class="text-2xl font-bold text-white mb-6">How Our AI Works</h3>
+                <div class="ai-processing mb-8">
+                    <div class="ai-circle"></div>
+                    <div class="ai-circle"></div>
+                    <div class="ai-circle"></div>
+                </div>
+                <p class="text-gray-300 max-w-2xl mx-auto">
+                    Plume AI uses advanced neural networks to analyze and enhance your images. Our multi-layer processing ensures the highest quality results with minimal artifacts.
+                </p>
+            </div>
+        </div>
+    </section>
+
+	<!-- Download Section -->
+	<section id="download" class="py-20 bg-gray-900">
+		<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+			<div class="text-center mb-16">
+				<h2 class="text-3xl font-bold text-white mb-4">Download Plume AI</h2>
+				<p class="text-lg text-gray-300 max-w-2xl mx-auto">
+					Get started with Plume AI today. Available for Windows only.
+				</p>
+			</div>
+			
+			<div class="max-w-3xl mx-auto bg-gray-800 rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow">
+				<div class="md:flex">
+					<div class="md:w-1/2 p-8">
+						<h3 class="text-xl font-semibold text-white mb-4">System Requirements</h3>
+						<ul class="space-y-3 mb-6">
+							<li class="flex items-start">
+								<i class="fas fa-check-circle text-green-400 mt-1 mr-2"></i>
+								<span class="text-gray-300">Windows 10/11 (64-bit)</span>
+							</li>
+							<li class="flex items-start">
+								<i class="fas fa-check-circle text-green-400 mt-1 mr-2"></i>
+								<span class="text-gray-300">4GB RAM minimum (8GB recommended)</span>
+							</li>
+							<li class="flex items-start">
+								<i class="fas fa-check-circle text-green-400 mt-1 mr-2"></i>
+								<span class="text-gray-300">2GB free disk space</span>
+							</li>
+							<li class="flex items-start">
+								<i class="fas fa-check-circle text-green-400 mt-1 mr-2"></i>
+								<span class="text-gray-300">Stable internet connection</span>
+							</li>
+							<li class="flex items-start">
+								<i class="fas fa-check-circle text-green-400 mt-1 mr-2"></i>
+								<span class="text-gray-300">Chrome browser installed</span>
+							</li>
+						</ul>
+						<div class="bg-yellow-900 bg-opacity-30 border-l-4 border-yellow-400 p-4 mb-6">
+							<div class="flex">
+								<div class="flex-shrink-0">
+									<i class="fas fa-exclamation-circle text-yellow-400"></i>
+								</div>
+								<div class="ml-3">
+									<p class="text-sm text-yellow-200">
+										The free version has all features but with limitations. Upgrade anytime to remove limits.
+									</p>
+								</div>
+							</div>
+						</div>
+						<a href="#" class="text-indigo-400 hover:text-indigo-300 flex items-center">
+							<i class="fas fa-file-pdf mr-2"></i> Download User Guide (PDF)
+						</a>
+					</div>
+					<div class="md:w-1/2 bg-gray-700 p-8 flex flex-col justify-center">
+						<h3 class="text-xl font-semibold text-white mb-6">Download Now</h3>
+						<div class="space-y-4">
+							<button onclick="openDownloadModal('free')" class="w-full bg-gray-600 hover:bg-gray-500 text-white px-6 py-4 rounded-lg font-medium text-center transition duration-300 download-btn transform hover:scale-105">
+								<div class="flex items-center justify-center">
+									<i class="fab fa-windows text-2xl mr-3"></i>
+									<div>
+										<div class="text-sm">Download</div>
+										<div>Free Version</div>
+									</div>
+								</div>
+							</button>
+							<button onclick="openDownloadModal('basic')" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white px-6 py-4 rounded-lg font-medium text-center transition duration-300 download-btn transform hover:scale-105">
+								<div class="flex items-center justify-center">
+									<i class="fab fa-windows text-2xl mr-3"></i>
+									<div>
+										<div class="text-sm">Download</div>
+										<div>Basic Version</div>
+									</div>
+								</div>
+							</button>
+							<button onclick="openDownloadModal('pro')" class="w-full bg-purple-600 hover:bg-purple-500 text-white px-6 py-4 rounded-lg font-medium text-center transition duration-300 download-btn transform hover:scale-105">
+								<div class="flex items-center justify-center">
+									<i class="fab fa-windows text-2xl mr-3"></i>
+									<div>
+										<div class="text-sm">Download</div>
+										<div>Pro Version</div>
+									</div>
+								</div>
+							</button>
+						</div>
+						<div class="mt-6 text-center text-sm text-gray-400">
+							Version 1.2.1 • 45.6 MB • Released Mei 2025
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<!-- Download Modal -->
+	<div id="download-modal" class="download-modal">
+		<div class="download-modal-content bg-white dark:bg-gray-800 rounded-lg shadow-xl max-w-md w-full p-6 animate-fade-in">
+			<div class="flex justify-between items-center mb-4">
+				<h3 class="text-xl font-bold text-gray-900 dark:text-white" id="modal-title">Download Free Version</h3>
+				<button onclick="closeDownloadModal()" class="text-gray-400 hover:text-gray-500 dark:hover:text-gray-300">
+					<i class="fas fa-times"></i>
+				</button>
+			</div>
+			<div class="mb-6">
+				<p class="text-gray-600 dark:text-gray-300" id="modal-description">
+					Download the free version of Plume AI with basic features.
+				</p>
+			</div>
+			<div class="space-y-4 mb-6">
+				<div class="flex items-center p-3 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+					<i class="fab fa-windows text-2xl text-blue-500 mr-3"></i>
+					<div>
+						<div class="font-medium text-gray-900 dark:text-white">Windows Installer</div>
+						<div class="text-sm text-gray-500 dark:text-gray-400" id="file-info">PlumeAI_Free_1.2.1.exe • 70 MB</div>
+					</div>
+					<a href="#" id="windows-download-link" class="ml-auto text-indigo-600 hover:text-indigo-500 dark:text-indigo-400 dark:hover:text-indigo-300" download>
+						<i class="fas fa-download"></i>
+					</a>
+				</div>
+				<div class="flex items-center p-3 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+					<i class="fas fa-file-pdf text-2xl text-red-500 mr-3"></i>
+					<div>
+						<div class="font-medium text-gray-900 dark:text-white">User Guide</div>
+						<div class="text-sm text-gray-500 dark:text-gray-400">PlumeAI_User_Guide.pdf • 70 KB</div>
+					</div>
+					<a href="#" class="ml-auto text-indigo-600 hover:text-indigo-500 dark:text-indigo-400 dark:hover:text-indigo-300">
+						<i class="fas fa-download"></i>
+					</a>
+				</div>
+				<div class="flex items-center p-3 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+					<i class="fas fa-file-alt text-2xl text-green-500 mr-3"></i>
+					<div>
+						<div class="font-medium text-gray-900 dark:text-white">Documentation</div>
+						<div class="text-sm text-gray-500 dark:text-gray-400">PlumeAI_Docs.zip • 5.2 MB</div>
+					</div>
+					<a href="#" class="ml-auto text-indigo-600 hover:text-indigo-500 dark:text-indigo-400 dark:hover:text-indigo-300">
+						<i class="fas fa-download"></i>
+					</a>
+				</div>
+			</div>
+			<div class="bg-blue-50 dark:bg-blue-900 dark:bg-opacity-20 border-l-4 border-blue-400 p-4">
+				<p class="text-sm text-blue-700 dark:text-blue-300">
+					<i class="fas fa-info-circle mr-2"></i> After downloading, run the installer and follow the setup instructions.
+				</p>
+			</div>
+		</div>
+	</div>
+
+    <!-- FAQ Section -->
+    <section class="py-20 bg-gray-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl font-bold text-white mb-4">Frequently Asked Questions</h2>
+                <p class="text-lg text-gray-300 max-w-2xl mx-auto">
+                    Can't find an answer? <a href="#" class="text-indigo-400 hover:text-indigo-300">Contact our support team</a>.
+                </p>
+            </div>
+            
+            <div class="max-w-3xl mx-auto">
+                <div class="space-y-4">
+                    <div class="border border-gray-700 rounded-lg overflow-hidden">
+                        <button class="w-full flex justify-between items-center p-6 text-left focus:outline-none faq-toggle bg-gray-700 hover:bg-gray-600">
+                            <span class="text-lg font-medium text-white">How does the automation work?</span>
+                            <i class="fas fa-chevron-down text-gray-400 transition-transform duration-300"></i>
+                        </button>
+                        <div class="hidden px-6 pb-6 pt-0 faq-content bg-gray-700">
+                            <p class="text-gray-300">
+                                Plume AI uses browser automation to interact with PixelCut's web interface. You simply provide your images, and our software handles all the clicking, waiting, and downloading automatically. It can process multiple images simultaneously across different browser tabs.
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <div class="border border-gray-700 rounded-lg overflow-hidden">
+                        <button class="w-full flex justify-between items-center p-6 text-left focus:outline-none faq-toggle bg-gray-700 hover:bg-gray-600">
+                            <span class="text-lg font-medium text-white">Is my payment information secure?</span>
+                            <i class="fas fa-chevron-down text-gray-400 transition-transform duration-300"></i>
+                        </button>
+                        <div class="hidden px-6 pb-6 pt-0 faq-content bg-gray-700">
+                            <p class="text-gray-300">
+                                Absolutely. We use Stripe for payment processing, which means we never store your credit card information on our servers. All transactions are encrypted and processed securely through Stripe's PCI-compliant systems.
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <div class="border border-gray-700 rounded-lg overflow-hidden">
+                        <button class="w-full flex justify-between items-center p-6 text-left focus:outline-none faq-toggle bg-gray-700 hover:bg-gray-600">
+                            <span class="text-lg font-medium text-white">Can I cancel my subscription anytime?</span>
+                            <i class="fas fa-chevron-down text-gray-400 transition-transform duration-300"></i>
+                        </button>
+                        <div class="hidden px-6 pb-6 pt-0 faq-content bg-gray-700">
+                            <p class="text-gray-300">
+                                Yes, you can cancel your subscription at any time from your account dashboard. Your subscription will remain active until the end of the current billing period, and you won't be charged again.
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <div class="border border-gray-700 rounded-lg overflow-hidden">
+                        <button class="w-full flex justify-between items-center p-6 text-left focus:outline-none faq-toggle bg-gray-700 hover:bg-gray-600">
+                            <span class="text-lg font-medium text-white">What happens if I exceed my plan's limits?</span>
+                            <i class="fas fa-chevron-down text-gray-400 transition-transform duration-300"></i>
+                        </button>
+                        <div class="hidden px-6 pb-6 pt-0 faq-content bg-gray-700">
+                            <p class="text-gray-300">
+                                If you exceed your plan's limits (like batch upload size), Plume AI will automatically split your job into smaller batches that fit within your plan's limits. You'll be able to complete your work, but it may take longer than if you upgraded to a higher plan.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section class="py-16 bg-gray-900">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl font-bold text-white mb-4">What Our Users Say</h2>
+                <p class="text-lg text-gray-300 max-w-2xl mx-auto">
+                    Don't just take our word for it. Here's what our customers have to say.
+                </p>
+            </div>
+            
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="bg-gray-800 p-8 rounded-xl hover:bg-gray-700 transition-colors">
+                    <div class="flex items-center mb-4">
+                        <img class="w-12 h-12 rounded-full mr-4", src="https://randomuser.me/api/portraits/women/32.jpg" alt="User">
+                        <div>
+                            <h4 class="font-bold text-white">Sarah Johnson</h4>
+                            <p class="text-indigo-400 text-sm">E-commerce Store Owner</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-300 italic">"Plume AI has saved me countless hours of manual work. I can now process hundreds of product images overnight!"</p>
+                    <div class="mt-4 text-yellow-400">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                </div>
+                
+                <div class="bg-gray-800 p-8 rounded-xl hover:bg-gray-700 transition-colors">
+                    <div class="flex items-center mb-4">
+                        <img class="w-12 h-12 rounded-full mr-4", src="https://randomuser.me/api/portraits/men/54.jpg" alt="User">
+                        <div>
+                            <h4 class="font-bold text-white">Michael Chen</h4>
+                            <p class="text-indigo-400 text-sm">Digital Marketing Agency</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-300 italic">"The integration with PixelCut is seamless. Our team can focus on creative work instead of repetitive image processing tasks."</p>
+                    <div class="mt-4 text-yellow-400">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                </div>
+                
+                <div class="bg-gray-800 p-8 rounded-xl hover:bg-gray-700 transition-colors">
+                    <div class="flex items-center mb-4">
+                        <img class="w-12 h-12 rounded-full mr-4", src="https://randomuser.me/api/portraits/women/68.jpg" alt="User">
+                        <div>
+                            <h4 class="font-bold text-white">Emma Rodriguez</h4>
+                            <p class="text-indigo-400 text-sm">Photography Studio</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-300 italic">"The AI upscaling quality is incredible. Our clients can't believe the resolution improvement in their old photos."</p>
+                    <div class="mt-4 text-yellow-400">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star-half-alt"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="dark-gradient-bg py-20 relative overflow-hidden">
+        <div class="floating-elements">
+            <div class="floating-element bg-purple-500 w-64 h-64 -top-32 -left-32 animate-spin-slow"></div>
+            <div class="floating-element bg-indigo-500 w-96 h-96 -bottom-64 -right-64 animate-spin-slow animation-delay-2000"></div>
+        </div>
+        
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
+            <h2 class="text-3xl font-bold text-white mb-6">Ready to Automate Your Image Workflow?</h2>
+            <p class="text-xl text-gray-300 mb-8 max-w-2xl mx-auto">
+                Join thousands of professionals who save hours every week with Plume AI.
+            </p>
+            <div class="flex flex-col sm:flex-row justify-center space-y-3 sm:space-y-0 sm:space-x-4">
+                <a href="#download" class="bg-white text-indigo-600 hover:bg-gray-100 px-8 py-4 rounded-lg font-medium text-lg text-center shadow-lg transition duration-300 download-btn transform hover:scale-105">
+                    <i class="fas fa-download mr-2"></i> Download Free Version
+                </a>
+                <a href="#pricing" class="bg-indigo-800 bg-opacity-60 hover:bg-opacity-80 text-white px-8 py-4 rounded-lg font-medium text-lg text-center transition duration-300 transform hover:scale-105">
+                    <i class="fas fa-crown mr-2"></i> Compare Plans
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid md:grid-cols-4 gap-8">
+                <div class="md:col-span-2">
+                    <div class="flex items-center mb-4">
+                        <i class="fas fa-feather-alt text-indigo-400 text-2xl mr-2 animate-bounce-slow"></i>
+                        <span class="text-xl font-bold">Plume AI</span>
+                    </div>
+                    <p class="text-gray-400 mb-4">
+                        Automating image enhancement for creative professionals and businesses worldwide.
+                    </p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-gray-400 hover:text-white transition duration-300 transform hover:scale-125">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white transition duration-300 transform hover:scale-125">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white transition duration-300 transform hover:scale-125">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white transition duration-300 transform hover:scale-125">
+                            <i class="fab fa-youtube"></i>
+                        </a>
+                    </div>
+                </div>
+                <div>
+                    <h3 class="text-sm font-semibold text-gray-300 uppercase tracking-wider mb-4">Product</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#features" class="text-gray-400 hover:text-white transition duration-300">Features</a></li>
+                        <li><a href="#pricing", class="text-gray-400 hover:text-white transition duration-300">Pricing</a></li>
+                        <li><a href="#download", class="text-gray-400 hover:text-white transition duration-300">Download</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition duration-300">Updates</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-sm font-semibold text-gray-300 uppercase tracking-wider mb-4">Company</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-white transition duration-300">About</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition duration-300">Blog</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition duration-300">Careers</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition duration-300">Contact</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-gray-800 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center">
+                <p class="text-gray-400 text-sm">
+                    &copy; 2025 Plume AI. All rights reserved.
+                </p>
+                <div class="flex space-x-6 mt-4 md:mt-0">
+                    <a href="#" class="text-gray-400 hover:text-white text-sm transition duration-300">Privacy Policy</a>
+                    <a href="#" class="text-gray-400 hover:text-white text-sm transition duration-300">Terms of Service</a>
+                    <a href="#" class="text-gray-400 hover:text-white text-sm transition duration-300">Cookie Policy</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+	
+	
+        // Mobile menu toggle
+        document.getElementById('mobile-menu-button').addEventListener('click', function() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        });
+
+        // FAQ toggle functionality
+        document.querySelectorAll('.faq-toggle').forEach(button => {
+            button.addEventListener('click', () => {
+                const content = button.nextElementSibling;
+                const icon = button.querySelector('i');
+                
+                content.classList.toggle('hidden');
+                icon.classList.toggle('rotate-180');
+            });
+        });
+
+        // Theme toggle
+        const themeToggle = document.getElementById('theme-toggle');
+        const body = document.body;
+        
+        themeToggle.addEventListener('click', () => {
+            body.classList.toggle('dark-mode');
+            
+            if (body.classList.contains('dark-mode')) {
+                themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+                themeToggle.classList.remove('bg-indigo-500');
+                themeToggle.classList.add('bg-yellow-500');
+            } else {
+                themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
+                themeToggle.classList.remove('bg-yellow-500');
+                themeToggle.classList.add('bg-indigo-500');
+            }
+        });
+
+        // Download modal functions
+		 function openDownloadModal(version) {
+			const modal = document.getElementById('download-modal');
+			const title = document.getElementById('modal-title');
+			const description = document.getElementById('modal-description');
+			const windowsDownloadLink = document.getElementById('windows-download-link');
+			const fileInfo = document.getElementById('file-info');
+			
+			if (version === 'free') {
+				title.textContent = 'Download Free Version';
+				description.textContent = 'Download the free version of Plume AI with basic features.';
+				windowsDownloadLink.href = 'HTTPS://LINK1';
+				fileInfo.textContent = 'PlumeAI_Free_1.2.1.exe • 70 MB';
+			} else if (version === 'basic') {
+				title.textContent = 'Download Basic Version';
+				description.textContent = 'Download the Basic version of Plume AI with more features and higher limits.';
+				windowsDownloadLink.href = 'HTTPS://LINK2';
+				fileInfo.textContent = 'PlumeAI_Basic_1.2.1.exe • 75 MB';
+			} else if (version === 'pro') {
+				title.textContent = 'Download Pro Version';
+				description.textContent = 'Download the Pro version of Plume AI with all features and highest limits.';
+				windowsDownloadLink.href = 'HTTPS://LINK3';
+				fileInfo.textContent = 'PlumeAI_Pro_1.2.1.exe • 80 MB';
+			}
+			
+			modal.style.display = 'flex';
+		}
+        
+        function closeDownloadModal() {
+            const modal = document.getElementById('download-modal');
+            modal.style.display = 'none';
+        }
+        
+        // Close modal when clicking outside
+        window.addEventListener('click', (event) => {
+            const modal = document.getElementById('download-modal');
+            if (event.target === modal) {
+                closeDownloadModal();
+            }
+        });
+
+        // Pricing toggle
+        const pricingToggleBtns = document.querySelectorAll('.pricing-toggle-btn');
+        
+        pricingToggleBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                // Remove active class from all buttons
+                pricingToggleBtns.forEach(b => b.classList.remove('active'));
+                
+                // Add active class to clicked button
+                btn.classList.add('active');
+                
+                // Get the plan type
+                const plan = btn.dataset.plan;
+                
+                // Show/hide pricing sections
+                if (plan === 'monthly') {
+                    document.querySelectorAll('.monthly-pricing').forEach(el => el.classList.remove('hidden-pricing'));
+                    document.querySelectorAll('.quarterly-pricing').forEach(el => el.classList.add('hidden-pricing'));
+                } else {
+                    document.querySelectorAll('.monthly-pricing').forEach(el => el.classList.add('hidden-pricing'));
+                    document.querySelectorAll('.quarterly-pricing').forEach(el => el.classList.remove('hidden-pricing'));
+                }
+            });
+        });
+
+        // Particle background
+        function createParticles() {
+            const particlesContainer = document.getElementById('particles');
+            const particleCount = 30;
+            
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('particle');
+                
+                // Random size between 5px and 15px
+                const size = Math.random() * 10 + 5;
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                
+                // Random position
+                particle.style.left = `${Math.random() * 100}%`;
+                particle.style.top = `${Math.random() * 100}%`;
+                
+                // Random animation
+                const duration = Math.random() * 20 + 10;
+                const delay = Math.random() * 5;
+                particle.style.animation = `float ${duration}s ease-in-out ${delay}s infinite`;
+                
+                // Random opacity
+                particle.style.opacity = Math.random() * 0.5 + 0.1;
+                
+                particlesContainer.appendChild(particle);
+            }
+        }
+        
+        // Create particles when page loads
+        window.addEventListener('load', createParticles);
+
+        // GSAP animations
+        gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
+        
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                const targetId = this.getAttribute('href');
+                if (targetId === '#') return;
+                
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    gsap.to(window, {
+                        duration: 1,
+                        scrollTo: {
+                            y: targetElement,
+                            offsetY: 80
+                        },
+                        ease: "power2.inOut"
+                    });
+                }
+            });
+        });
+        
+        // Animate elements on scroll
+        gsap.utils.toArray('.card-hover').forEach(card => {
+            gsap.from(card, {
+                scrollTrigger: {
+                    trigger: card,
+                    start: "top 80%",
+                    toggleActions: "play none none none"
+                },
+                y: 50,
+                opacity: 0,
+                duration: 0.8,
+                ease: "power2.out"
+            });
+        });
+        
+        // Hero section animation
+        gsap.from("nav", { 
+            y: -50, 
+            opacity: 0, 
+            duration: 0.8, 
+            ease: "power2.out" 
+        });
+        
+        gsap.from(".dark-hero-pattern h1", { 
+            y: 30, 
+            opacity: 0, 
+            duration: 0.8, 
+            delay: 0.3, 
+            ease: "power2.out" 
+        });
+        
+        gsap.from(".dark-hero-pattern p", { 
+            y: 30, 
+            opacity: 0, 
+            duration: 0.8, 
+            delay: 0.5, 
+            ease: "power2.out" 
+        });
+        
+        gsap.from(".dark-hero-pattern a", { 
+            y: 30, 
+            opacity: 0, 
+            duration: 0.8, 
+            delay: 0.7, 
+            ease: "power2.out",
+            stagger: 0.1
+        });
+        
+        gsap.from(".animate-float", { 
+            y: 30, 
+            opacity: 0, 
+            duration: 1, 
+            delay: 0.9, 
+            ease: "power2.out" 
+        });
+        
+        // Animate feature comparison grid
+        gsap.from(".feature-grid", {
+            scrollTrigger: {
+                trigger: ".feature-grid",
+                start: "top 80%",
+                toggleActions: "play none none none"
+            },
+            opacity: 0,
+            y: 50,
+            duration: 1,
+            ease: "power2.out"
+        });
+        
+        // Animate pricing cards
+        gsap.from(".pricing-card", {
+            scrollTrigger: {
+                trigger: "#pricing",
+                start: "top 80%",
+                toggleActions: "play none none none"
+            },
+            opacity: 0,
+            y: 50,
+            duration: 0.8,
+            stagger: 0.2,
+            ease: "power2.out"
+        });
+        
+        // Animate AI processing section
+        gsap.from(".ai-processing", {
+            scrollTrigger: {
+                trigger: ".ai-processing",
+                start: "top 80%",
+                toggleActions: "play none none none"
+            },
+            scale: 0,
+            opacity: 0,
+            duration: 1,
+            ease: "back.out(1.7)"
+        });
+        
+        // Animate testimonials
+        gsap.from(".bg-gray-800", {
+            scrollTrigger: {
+                trigger: ".bg-gray-800",
+                start: "top 80%",
+                toggleActions: "play none none none"
+            },
+            opacity: 0,
+            y: 50,
+            duration: 0.8,
+            stagger: 0.2,
+            ease: "power2.out"
+        });
+    </script>
+</body>
+</html>
