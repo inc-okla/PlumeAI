@@ -144,22 +144,23 @@
             50% { opacity: 0.5; }
         }
         
-        .download-modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0,0,0,0.5);
-            z-index: 1000;
-            justify-content: center;
-            align-items: center;
-        }
+		.download-modal {
+			display: none;
+			position: fixed;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			background-color: rgba(0, 0, 0, 0.5);
+			z-index: 1000;
+			justify-content: center;
+			align-items: center;
+		}
         
         .dark-mode .download-modal-content {
             background-color: #2d2d2d;
             color: #f8fafc;
+			animation: fadeIn 0.3s ease-out;
         }
         
         /* New animations */
@@ -195,10 +196,10 @@
             animation: fadeIn 1.5s ease-in-out;
         }
         
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
+		@keyframes fadeIn {
+			from { opacity: 0; transform: translateY(-20px); }
+			to { opacity: 1; transform: translateY(0); }
+		}
         
         .feature-grid {
             display: grid;
@@ -378,7 +379,7 @@
             <div class="flex justify-between h-16">
                 <div class="flex items-center">
                     <div class="flex-shrink-0 flex items-center">
-                        <img src="https://drive.google.com/file/d/12I2HlhsAJLjgjuN9n2UGYv84Tjbroo-0/view?usp=drive_link" alt="Plume Logo" class="w-8 h-8 mr-2">
+                        <img src="w-full bg-purple-600 hover:bg-purple-500 text-white px-6 py-4 rounded-lg" alt="Plume Logo" class="w-8 h-8 mr-2">
                         <span class="text-xl font-bold">Plume AI</span>
                     </div>
                 </div>
@@ -811,7 +812,7 @@
 					<div class="md:w-1/2 bg-gray-700 p-8 flex flex-col justify-center">
 						<h3 class="text-xl font-semibold text-white mb-6">Download Now</h3>
 						<div class="space-y-4">
-							<button onclick="openDownloadModal('free')" class="w-full bg-gray-600 hover:bg-gray-500 text-white px-6 py-4 rounded-lg font-medium text-center transition duration-300 download-btn transform hover:scale-105">
+							<a href="https://github.com/inc-okla/PlumeAI/releases/download/v1.2.1/PlumeAI_Free_1.2.1.exe" class="w-full bg-gray-600 hover:bg-gray-500 text-white px-6 py-4 rounded-lg font-medium text-center transition duration-300 download-btn transform hover:scale-105 block" download>
 								<div class="flex items-center justify-center">
 									<i class="fab fa-windows text-2xl mr-3"></i>
 									<div>
@@ -819,8 +820,9 @@
 										<div>Free Version</div>
 									</div>
 								</div>
-							</button>
-							<button onclick="openDownloadModal('basic')" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white px-6 py-4 rounded-lg font-medium text-center transition duration-300 download-btn transform hover:scale-105">
+							</a>
+							<a href="https://github.com/inc-okla/PlumeAI/releases/download/v1.2.1/PlumeAI_Basic_1.2.1.exe" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white px-6 py-4 rounded-lg font-medium text-center transition duration-300 download-btn transform hover:scale-105 block" download>
+							
 								<div class="flex items-center justify-center">
 									<i class="fab fa-windows text-2xl mr-3"></i>
 									<div>
@@ -828,8 +830,8 @@
 										<div>Basic Version</div>
 									</div>
 								</div>
-							</button>
-							<button onclick="openDownloadModal('pro')" class="w-full bg-purple-600 hover:bg-purple-500 text-white px-6 py-4 rounded-lg font-medium text-center transition duration-300 download-btn transform hover:scale-105">
+							</a>
+							<a href="https://github.com/inc-okla/PlumeAI/releases/download/v1.2.1/PlumeAI_Premium_1.2.1.exe" class="w-full bg-purple-600 hover:bg-purple-500 text-white px-6 py-4 rounded-lg font-medium text-center transition duration-300 download-btn transform hover:scale-105 block" download>
 								<div class="flex items-center justify-center">
 									<i class="fab fa-windows text-2xl mr-3"></i>
 									<div>
@@ -837,10 +839,10 @@
 										<div>Pro Version</div>
 									</div>
 								</div>
-							</button>
+							</a>
 						</div>
 						<div class="mt-6 text-center text-sm text-gray-400">
-							Version 1.2.1 • 45.6 MB • Released Mei 2025
+							Version 1.2.1 • 464 MB • Released Mei 2025
 						</div>
 					</div>
 				</div>
@@ -848,59 +850,6 @@
 		</div>
 	</section>
 
-	<!-- Download Modal -->
-	<div id="download-modal" class="download-modal">
-		<div class="download-modal-content bg-white dark:bg-gray-800 rounded-lg shadow-xl max-w-md w-full p-6 animate-fade-in">
-			<div class="flex justify-between items-center mb-4">
-				<h3 class="text-xl font-bold text-gray-900 dark:text-white" id="modal-title">Download Free Version</h3>
-				<button onclick="closeDownloadModal()" class="text-gray-400 hover:text-gray-500 dark:hover:text-gray-300">
-					<i class="fas fa-times"></i>
-				</button>
-			</div>
-			<div class="mb-6">
-				<p class="text-gray-600 dark:text-gray-300" id="modal-description">
-					Download the free version of Plume AI with basic features.
-				</p>
-			</div>
-			<div class="space-y-4 mb-6">
-				<div class="flex items-center p-3 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
-					<i class="fab fa-windows text-2xl text-blue-500 mr-3"></i>
-					<div>
-						<div class="font-medium text-gray-900 dark:text-white">Windows Installer</div>
-						<div class="text-sm text-gray-500 dark:text-gray-400" id="file-info">PlumeAI_Free_1.2.1.exe • 70 MB</div>
-					</div>
-					<a href="#" id="windows-download-link" class="ml-auto text-indigo-600 hover:text-indigo-500 dark:text-indigo-400 dark:hover:text-indigo-300" download>
-						<i class="fas fa-download"></i>
-					</a>
-				</div>
-				<div class="flex items-center p-3 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
-					<i class="fas fa-file-pdf text-2xl text-red-500 mr-3"></i>
-					<div>
-						<div class="font-medium text-gray-900 dark:text-white">User Guide</div>
-						<div class="text-sm text-gray-500 dark:text-gray-400">PlumeAI_User_Guide.pdf • 70 KB</div>
-					</div>
-					<a href="#" class="ml-auto text-indigo-600 hover:text-indigo-500 dark:text-indigo-400 dark:hover:text-indigo-300">
-						<i class="fas fa-download"></i>
-					</a>
-				</div>
-				<div class="flex items-center p-3 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
-					<i class="fas fa-file-alt text-2xl text-green-500 mr-3"></i>
-					<div>
-						<div class="font-medium text-gray-900 dark:text-white">Documentation</div>
-						<div class="text-sm text-gray-500 dark:text-gray-400">PlumeAI_Docs.zip • 5.2 MB</div>
-					</div>
-					<a href="#" class="ml-auto text-indigo-600 hover:text-indigo-500 dark:text-indigo-400 dark:hover:text-indigo-300">
-						<i class="fas fa-download"></i>
-					</a>
-				</div>
-			</div>
-			<div class="bg-blue-50 dark:bg-blue-900 dark:bg-opacity-20 border-l-4 border-blue-400 p-4">
-				<p class="text-sm text-blue-700 dark:text-blue-300">
-					<i class="fas fa-info-circle mr-2"></i> After downloading, run the installer and follow the setup instructions.
-				</p>
-			</div>
-		</div>
-	</div>
 
     <!-- FAQ Section -->
     <section class="py-20 bg-gray-800">
@@ -1155,47 +1104,48 @@
         });
 
         // Download modal functions
-	function openDownloadModal(version) {
-	    const modal = document.getElementById('download-modal');
-	    const title = document.getElementById('modal-title');
-	    const description = document.getElementById('modal-description');
-	    const windowsDownloadLink = document.getElementById('windows-download-link');
-	    const fileInfo = document.getElementById('file-info');
-	
-	    let downloadData = {
-	        free: {
-	            title: 'Download Free Version',
-	            description: 'Download the free version of Plume AI with basic features.',
-	            link: 'https://github.com/inc-okla/PlumeAI/releases/download/v1.2.1/PlumeAI_Free_1.2.1.exe',
-	            fileName: 'PlumeAI_Free_1.2.1.exe',
-	            size: '70 MB'
-	        },
-	        basic: {
-	            title: 'Download Basic Version',
-	            description: 'Download the Basic version of Plume AI with more features and higher limits.',
-	            link: 'https://github.com/inc-okla/PlumeAI/releases/download/v1.2.1/PlumeAI_Basic_1.2.1.exe',
-	            fileName: 'PlumeAI_Basic_1.2.1.exe',
-	            size: '75 MB'
-	        },
-	        pro: {
-	            title: 'Download Pro Version',
-	            description: 'Download the Pro version of Plume AI with all features and highest limits.',
-	            link: 'https://github.com/inc-okla/PlumeAI/releases/download/v1.2.1/PlumeAI_Premium_1.2.1.exe',
-	            fileName: 'PlumeAI_Pro_1.2.1.exe',
-	            size: '80 MB'
-	        }
-	    };
-	
-	    const versionData = downloadData[version];
-	
-	    if (versionData) {
-	        title.textContent = versionData.title;
-	        description.textContent = versionData.description;
-	        windowsDownloadLink.href = versionData.link;
-	        fileInfo.textContent = `${versionData.fileName} • ${versionData.size}`;
-	        modal.style.display = 'flex';
-	    }
-	}
+		function openDownloadModal(version) {
+			const modal = document.getElementById('download-modal');
+			const title = document.getElementById('modal-title');
+			const description = document.getElementById('modal-description');
+			const windowsDownloadLink = document.getElementById('windows-download-link');
+			const fileInfo = document.getElementById('file-info');
+
+			let downloadData = {
+				free: {
+					title: 'Download Free Version',
+					description: 'Download the free version of Plume AI with basic features.',
+					link: 'https://github.com/inc-okla/PlumeAI/releases/download/v1.2.1/PlumeAI_Free_1.2.1.exe',
+					fileName: 'PlumeAI_Free_1.2.1.exe',
+					size: '68 MB'
+				},
+				basic: {
+					title: 'Download Basic Version',
+					description: 'Download the Basic version of Plume AI with more features and higher limits.',
+					link: 'https://github.com/inc-okla/PlumeAI/releases/download/v1.2.1/PlumeAI_Basic_1.2.1.exe',
+					fileName: 'PlumeAI_Basic_1.2.1.exe',
+					size: '117 MB'
+				},
+				pro: {
+					title: 'Download Pro Version',
+					description: 'Download the Pro version of Plume AI with all features and highest limits.',
+					link: 'https://github.com/inc-okla/PlumeAI/releases/download/v1.2.1/PlumeAI_Premium_1.2.1.exe',
+					fileName: 'PlumeAI_Pro_1.2.1.exe',
+					size: '464 MB'
+				}
+			};
+
+			const versionData = downloadData[version];
+
+			if (versionData) {
+				title.textContent = versionData.title;
+				description.textContent = versionData.description;
+				windowsDownloadLink.href = versionData.link;
+				windowsDownloadLink.setAttribute('download', versionData.fileName); // Tambah atribut download
+				fileInfo.textContent = `${versionData.fileName} • ${versionData.size}`;
+				modal.style.display = 'flex';
+			}
+		}
 
         
         function closeDownloadModal() {
