@@ -450,37 +450,18 @@
                     </div>
                 </div>
 		    
-		<div class="w-full aspect-[3/2]">
-		  <div class="h-full w-full flex flex-col rounded-2xl overflow-hidden">
-		    <div class="h-full w-full grow flex flex-col bg-gray-500" style="position: relative; display: flex; overflow: hidden; touch-action: none; user-select: none;">
-		      
-		      <!-- Before Image -->
-		      <div style="object-fit: contain; width: 100%; height: auto;">
-		        <img class="pointer-events-none" src="https://cdn3.pixelcut.app/upscale_before_1_b3b5355379.jpg" alt="Image before" style="display: block; width: 100%; height: 100%; object-fit: cover; object-position: center center;">
-		        <div class="absolute rounded-md py-2 px-2 flex bottom-3 bg-black/60 pointer-events-none text-white text-xs font-semibold left-3"><span>Before</span></div>
-		      </div>
-		      
-		      <!-- After Image (clipped) -->
-		      <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; clip-path: inset(0 0 0 52.25%);">
-		        <div style="object-fit: contain; width: 100%; height: auto;">
-		          <img class="pointer-events-none" src="https://cdn3.pixelcut.app/upscale_after_1_f310c75826.jpg" alt="Image after" style="display: block; width: 100%; height: 100%; object-fit: cover; object-position: center center;">
-		          <div class="absolute rounded-md py-2 px-2 flex bottom-3 bg-black/60 pointer-events-none text-white text-xs font-semibold right-3"><span>After</span></div>
-		        </div>
-		      </div>
-		      
-		      <!-- Slider Button -->
-		      <button role="slider" style="position: absolute; top: 0; height: 100%; background: none; border: none; left: 52.25%; transform: translateX(-50%);">
-		        <div class="h-full w-1 bg-white inline-flex items-center justify-center cursor-ew-resize">
-		          <div class="absolute h-8 w-8 rounded-full bg-white z-10 flex items-center justify-center top-1/2 transform left-1/2 -translate-x-1/2 -translate-y-1/2">
-		            <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" width="20" viewBox="0 0 22 14">
-		              <path d="M.831 7.064c.005-.173.039-.33.103-.471a1.4 1.4 0 0 1 .3-.424L6.402 1.11c.21-.205.463-.307.76-.307.2 0 .382.05.546.15.169.096.303.226.403.39a1.076 1.076 0 0 1-.205 1.347L3.401 7.057l4.505 4.375c.237.237.356.505.356.806 0 .2-.05.383-.15.547-.1.164-.235.294-.404.39-.164.1-.346.15-.547.15-.296 0-.549-.105-.759-.314L1.234 7.953a1.383 1.383 0 0 1-.307-.417 1.164 1.164 0 0 1-.096-.472ZM21.169 7.064c0 .17-.034.326-.103.472-.063.141-.166.28-.307.417l-5.161 5.059c-.21.21-.465.314-.766.314-.196 0-.378-.05-.547-.15a1.102 1.102 0 0 1-.403-.39 1.065 1.065 0 0 1-.144-.547c0-.3.117-.57.349-.806l4.505-4.375-4.505-4.369a1.085 1.085 0 0 1-.349-.8c0-.2.048-.382.144-.546.1-.164.235-.294.403-.39.169-.1.351-.15.547-.15.3 0 .556.102.766.307l5.16 5.059a1.211 1.211 0 0 1 .41.895Z"/>
-		            </svg>
-		          </div>
-		        </div>
-		      </button>
-		
+		<div class="relative bg-gray-800 p-2 rounded-2xl shadow-2xl animate-float hover:shadow-purple-500/30 transition-shadow">
+		    <video 
+		        src="https://cdn3.pixelcut.app/web/cms/Hero/upscaler.mp4" 
+		        class="rounded-xl border border-gray-700 hover:border-indigo-500 transition-colors" 
+		        autoplay 
+		        muted 
+		        loop 
+		        playsinline
+		    ></video>
+		    <div class="absolute -bottom-5 -right-5 bg-indigo-500 text-white p-3 rounded-full shadow-lg hover:bg-indigo-600 transition-colors">
+		        <i class="fas fa-magic text-xl"></i>
 		    </div>
-		  </div>
 		</div>
 
             </div>
